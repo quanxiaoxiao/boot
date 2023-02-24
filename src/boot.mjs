@@ -16,22 +16,6 @@ export default async ({
   }
   const app = new Koa();
 
-  if (logger) {
-    app.use(async (ctx, next) => {
-      const { method, path } = ctx;
-      logger.info(`${ctx.headers['x-remote-address'] || ctx.ip} -> ${path}${ctx.querystring ? `?${decodeURIComponent(ctx.querystring)}` : ''} [${method}]`);
-      ctx.logger = logger;
-      try {
-        await next();
-      } catch (error) {
-        if (error.statusCode >= 500) {
-          logger.error(`${path} [${method}] \`${error.message}\``);
-        }
-        throw error;
-      }
-    });
-  }
-
   middlewares.forEach((fn) => {
     app.use(fn);
   });

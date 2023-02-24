@@ -19,11 +19,12 @@ export default async ({
     uri = `mongodb://${hostname}:${port}/${database}`;
   }
 
-  if (logger) {
+  if (logger && typeof logger.warn === 'function') {
     logger.warn(`connect mongo -> \`${uri}\``);
   }
 
   await new Promise((resolve, reject) => {
+    mongoose.set('strictQuery', false);
     mongoose.connect(uri, options, (error) => {
       if (error) {
         if (logger) {
@@ -31,7 +32,7 @@ export default async ({
         }
         reject();
       } else {
-        if (logger) {
+        if (logger && typeof logger.warn === 'function') {
           logger.warn('mongo connect success');
         }
         resolve();
