@@ -5,10 +5,16 @@ export default ({
   level,
   fd1,
   fd2,
+  format: loggerFormat,
 }) => {
   const format = winston
     .format
-    .printf((options) => `${dayjs().format('YYYY/MM/DD_HH:mm:ss')} [${options.level}]: ${options.message}`);
+    .printf((options) => {
+      if (typeof loggerFormat === 'function') {
+        return loggerFormat(options);
+      }
+      return `${dayjs().format('YYYY/MM/DD_HH:mm:ss')} [${options.level}]: ${options.message}`;
+    });
 
   const logger = winston.createLogger({
     level,
