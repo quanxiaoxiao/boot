@@ -22,21 +22,9 @@ export default async ({
   if (logger && typeof logger.warn === 'function') {
     logger.warn(`connect mongo ->- \`${uri}\``);
   }
-
-  await new Promise((resolve, reject) => {
-    mongoose.set('strictQuery', false);
-    mongoose.connect(uri, options, (error) => {
-      if (error) {
-        if (logger && typeof logger.error === 'function') {
-          logger.error(`\`${uri}\` connect mongo fail, ${error.message}`);
-        }
-        reject(new Error(`connect mongo fail, \`${error.message}\``));
-      } else {
-        if (logger && typeof logger.warn === 'function') {
-          logger.warn('mongo connect success');
-        }
-        resolve();
-      }
-    });
-  });
+  mongoose.set('strictQuery', false);
+  await mongoose.connect(uri, options);
+  if (logger && typeof logger.warn === 'function') {
+    logger.warn('mongo connect success');
+  }
 };
