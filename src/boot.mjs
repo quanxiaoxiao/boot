@@ -1,10 +1,12 @@
 import http from 'node:http';
+import https from 'node:https';
 import Koa from 'koa';
 import connectMongo from './connectMongo.mjs';
 
 export default async ({
   port,
   middlewares = [],
+  cert,
   logger,
   mongo,
 }) => {
@@ -20,11 +22,16 @@ export default async ({
     app.use(fn);
   });
 
-  const server = http.createServer({}, app.callback());
+  const server = cert && cert.key
+    ? https.createServer({
+      key: cert.key,
+      cert: cert.cert,
+    }, app.callback)
+    : http.createServer({}, app.callback());
 
   server.listen(port, () => {
     if (logger && logger.warn) {
-      logger.warn(`server listen at port: ${port}`);
+      logger.warn(`server listen \`${port}\``);
     }
   });
 
@@ -38,4 +45,5 @@ export default async ({
     }, 3000);
     killTimer.unref();
   });
+  return server;
 };
