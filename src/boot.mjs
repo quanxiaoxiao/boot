@@ -32,6 +32,8 @@ export default async ({
   server.listen(port, () => {
     if (logger && logger.warn) {
       logger.warn(`server listen \`${port}\``);
+    } else {
+      console.log(`server listen \`${port}\``);
     }
   });
 
