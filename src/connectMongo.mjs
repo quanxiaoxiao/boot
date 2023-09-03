@@ -25,13 +25,13 @@ export default async ({
   }
 
   if (logger && typeof logger.warn === 'function') {
-    logger.warn(`connect mongo ->- \`${uri}\``);
+    logger.warn(`connect mongodb ->- \`${uri}\``);
   } else {
-    console.log(`connect mongo ->- \`${uri}\``);
+    console.log(`connect mongodb ->- \`${uri}\``);
   }
   mongoose.set('strictQuery', false);
   await mongoose.connect(uri, options);
   if (logger && typeof logger.warn === 'function') {
-    logger.warn('mongo connect success');
+    logger.warn('mongodb connect success');
   }
 };

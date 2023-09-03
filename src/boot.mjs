@@ -29,12 +29,15 @@ export default async ({
     }, app.callback)
     : http.createServer({}, app.callback());
 
-  server.listen(port, () => {
-    if (logger && logger.warn) {
-      logger.warn(`server listen \`${port}\``);
-    } else {
-      console.log(`server listen \`${port}\``);
-    }
+  await new Promise((resolve) => {
+    server.listen(port, () => {
+      if (logger && logger.warn) {
+        logger.warn(`server listen \`${port}\``);
+      } else {
+        console.log(`server listen \`${port}\``);
+      }
+      resolve();
+    });
   });
 
   process.on('uncaughtException', (error) => {
@@ -47,5 +50,6 @@ export default async ({
     }, 3000);
     killTimer.unref();
   });
+
   return server;
 };
