@@ -33,7 +33,7 @@ export default async ({
     options.cert = cert.cert;
   }
 
-  const server = schema.createServer(options, app.callback);
+  const server = schema.createServer(options, app.callback());
 
   await new Promise((resolve) => {
     server.listen(port, () => {
