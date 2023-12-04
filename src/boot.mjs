@@ -9,6 +9,7 @@ export default async ({
   cert,
   logger,
   mongo,
+  ...other
 }) => {
   if (mongo) {
     await connectMongo({
@@ -22,12 +23,17 @@ export default async ({
     app.use(fn);
   });
 
-  const server = cert && cert.key
-    ? https.createServer({
-      key: cert.key,
-      cert: cert.cert,
-    }, app.callback)
-    : http.createServer({}, app.callback());
+  const schema = cert ? https : http;
+  const options = {
+    ...other,
+  };
+
+  if (cert) {
+    options.key = cert.key;
+    options.cert = cert.cert;
+  }
+
+  const server = schema.createServer(options, app.callback);
 
   await new Promise((resolve) => {
     server.listen(port, () => {
@@ -42,7 +48,7 @@ export default async ({
 
   process.on('uncaughtException', (error) => {
     console.error(error);
-    if (logger) {
+    if (logger && logger.error) {
       logger.error(`boom ------------ ${error.message}`);
     }
     const killTimer = setTimeout(() => {

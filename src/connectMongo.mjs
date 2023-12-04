@@ -24,14 +24,16 @@ export default async ({
     uri = `mongodb://${hostname}:${port}/${database}`;
   }
 
-  if (logger && typeof logger.warn === 'function') {
+  if (logger && logger.warn) {
     logger.warn(`connect mongodb ->- \`${uri}\``);
   } else {
     console.log(`connect mongodb ->- \`${uri}\``);
   }
   mongoose.set('strictQuery', false);
   await mongoose.connect(uri, options);
-  if (logger && typeof logger.warn === 'function') {
+  if (logger && logger.warn) {
     logger.warn('mongodb connect success');
+  } else {
+    console.log('mongodb connect success');
   }
 };
