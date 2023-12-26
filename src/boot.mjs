@@ -7,15 +7,12 @@ export default async ({
   port,
   middlewares = [],
   cert,
-  logger,
-  mongo,
+  mongo: mongoConfig,
+  onError,
   ...other
 }) => {
-  if (mongo) {
-    await connectMongo({
-      ...mongo,
-      logger,
-    });
+  if (mongoConfig) {
+    await connectMongo(mongoConfig);
   }
   const app = new Koa();
 
@@ -24,6 +21,7 @@ export default async ({
   });
 
   const schema = cert ? https : http;
+
   const options = {
     ...other,
   };
@@ -37,19 +35,14 @@ export default async ({
 
   await new Promise((resolve) => {
     server.listen(port, () => {
-      if (logger && logger.warn) {
-        logger.warn(`server listen \`${port}\``);
-      } else {
-        console.log(`server listen \`${port}\``);
-      }
       resolve();
     });
   });
 
   process.on('uncaughtException', (error) => {
     console.error(error);
-    if (logger && logger.error) {
-      logger.error(`boom ------------ ${error.message}`);
+    if (onError) {
+      onError(error);
     }
     const killTimer = setTimeout(() => {
       process.exit(1);

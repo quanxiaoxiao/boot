@@ -1,12 +1,13 @@
 import mongoose from 'mongoose';
 
 export default async ({
-  logger,
+  hostname = '127.0.0.1',
+  port = 27017,
   username,
   password,
-  hostname,
-  port,
   database,
+  onRequest,
+  onConnect,
 }) => {
   const options = {};
 
@@ -23,17 +24,15 @@ export default async ({
   } else {
     uri = `mongodb://${hostname}:${port}/${database}`;
   }
-
-  if (logger && logger.warn) {
-    logger.warn(`connect mongodb ->- \`${uri}\``);
-  } else {
-    console.log(`connect mongodb ->- \`${uri}\``);
+  if (onRequest) {
+    await onRequest(uri);
   }
+
   mongoose.set('strictQuery', false);
-  await mongoose.connect(uri, options);
-  if (logger && logger.warn) {
-    logger.warn('mongodb connect success');
-  } else {
-    console.log('mongodb connect success');
+
+  await mongoose.connect(uri);
+
+  if (onConnect) {
+    await onConnect(options);
   }
 };
