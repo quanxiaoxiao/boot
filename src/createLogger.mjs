@@ -3,10 +3,10 @@ import dayjs from 'dayjs';
 
 /**
  * @param {Object} options
- * @param {('info'|'warn'|'error')} [level="info"] options.level - logger output limit type
+ * @param {string} [options.level="info"] - logger output limit type
  * @param {string} options.fd1 - filename path, all info output
  * @param {string} options.fd2 - filename path, error output
- * @param {function} options.loggerFormat
+ * @param {Function} options.format
  * @returns {Object} winston instance object
  */
 export default ({

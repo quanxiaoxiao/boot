@@ -1,11 +1,25 @@
 import mongoose from 'mongoose';
 
+/**
+ * @typedef {Object} MongoOptions
+ * @property {string} database
+ * @property {string} [hostname='127.0.0.1']
+ * @property {number} [port=27017]
+ * @property {string} [username='']
+ * @property {string} [password='']
+ * @property {Function} [onRequest]
+ * @property {Function} [onConnect]
+ */
+
+/**
+ * @param {MongoOptions} options
+ */
 export default async ({
+  database,
   hostname = '127.0.0.1',
   port = 27017,
   username,
   password,
-  database,
   onRequest,
   onConnect,
 }) => {

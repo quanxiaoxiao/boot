@@ -1,6 +1,6 @@
 {
   "name": "@quanxiaoxiao/boot",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "",
   "keywords": [],
   "author": "",
@@ -9,7 +9,7 @@
   "exports": "./src/index.mjs",
   "type": "module",
   "scripts": {
-    "lint": "eslint src/* --ignore-path .gitignore",
+    "lint": "tsc",
     "doc": "jsdoc -c jsdoc.conf.json"
   },
   "publishConfig": {
@@ -19,12 +19,14 @@
     "dayjs": "^1.11.6",
     "koa": "^2.13.4",
     "mongoose": "^8.0.2",
+    "typescript": "^5.3.3",
     "winston": "^3.8.2"
   },
   "devDependencies": {
     "@babel/eslint-parser": "^7.19.1",
     "@babel/plugin-proposal-nullish-coalescing-operator": "^7.16.7",
     "@babel/plugin-proposal-optional-chaining": "^7.16.7",
+    "@types/koa": "^2.13.12",
     "eslint": "^8.9.0",
     "eslint-config-airbnb": "^19.0.4",
     "eslint-plugin-import": "^2.25.4",

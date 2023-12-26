@@ -3,6 +3,25 @@ import https from 'node:https';
 import Koa from 'koa';
 import connectMongo from './connectMongo.mjs';
 
+/** @typedef {import('koa').Middleware} KoaMiddleware */
+/** @typedef {import('http').Server} HttpServer}
+/** @typedef {import('https').Server} HttpsServer}
+
+/**
+ * @typedef {Object} CertOptions
+ * @property {Buffer} cert
+ * @property {Buffer} key
+ */
+
+/**
+ * @param {Object} options
+ * @param {number} options.port
+ * @param {Array<KoaMiddleware>} [options.middlewares = []]
+ * @param {CertOptions} [options.cert]
+ * @param {Function} [options.onError]
+ * @param {import('./connectMongo.mjs').MongoOptions} [options.mongo]
+ * @returns {Promise<HttpServer|HttpsServer>}
+ */
 export default async ({
   port,
   middlewares = [],
@@ -20,22 +39,28 @@ export default async ({
     app.use(fn);
   });
 
-  const schema = cert ? https : http;
+  /**
+   * @type {CertOptions}
+  */
+  const options = {};
 
-  const options = {
-    ...other,
-  };
+  Object.assign(options, other);
 
   if (cert) {
     options.key = cert.key;
     options.cert = cert.cert;
   }
 
-  const server = schema.createServer(options, app.callback());
+  const server = cert
+    ? https.createServer(options, app.callback())
+    : http.createServer(app.callback());
 
+  /**
+   * @returns {Promise<number>}
+   */
   await new Promise((resolve) => {
     server.listen(port, () => {
-      resolve();
+      resolve(port);
     });
   });
 
