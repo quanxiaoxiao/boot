@@ -9,8 +9,6 @@ export default async ({
   onRequest,
   onConnect,
 }) => {
-  const options = {};
-
   let uri;
 
   if (!database || database.trim() === '') {
@@ -19,7 +17,6 @@ export default async ({
   }
 
   if (username && password) {
-    options.authSource = 'admin';
     uri = `mongodb://${username}:${password}@${hostname}:${port}/${database}`;
   } else {
     uri = `mongodb://${hostname}:${port}/${database}`;
@@ -33,6 +30,6 @@ export default async ({
   await mongoose.connect(uri);
 
   if (onConnect) {
-    await onConnect(options);
+    await onConnect(uri);
   }
 };

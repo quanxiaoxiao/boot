@@ -1,8 +1,16 @@
 import winston from 'winston';
 import dayjs from 'dayjs';
 
+/**
+ * @param {Object} options
+ * @param {('info'|'warn'|'error')} [level="info"] options.level - logger output limit type
+ * @param {string} options.fd1 - filename path, all info output
+ * @param {string} options.fd2 - filename path, error output
+ * @param {function} options.loggerFormat
+ * @returns {Object} winston instance object
+ */
 export default ({
-  level,
+  level = 'info',
   fd1,
   fd2,
   format: loggerFormat,
@@ -11,7 +19,10 @@ export default ({
     .format
     .printf((options) => {
       if (typeof loggerFormat === 'function') {
-        return loggerFormat(options);
+        return loggerFormat({
+          level: options.level.toUpperCase(),
+          message: options.message,
+        });
       }
       return `[${options.level.toUpperCase()} ${dayjs().format('YYYY/MM/DD HH:mm:ss.SSS')}] ${options.message}`;
     });
