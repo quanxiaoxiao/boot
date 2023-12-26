@@ -13,7 +13,7 @@ export default ({
       if (typeof loggerFormat === 'function') {
         return loggerFormat(options);
       }
-      return `${dayjs().format('YYYY/MM/DD_HH:mm:ss')} [${options.level}]: ${options.message}`;
+      return `[${options.level.toUpperCase()} ${dayjs().format('YYYY/MM/DD HH:mm:ss.SSS')}] ${options.message}`;
     });
 
   const logger = winston.createLogger({
